@@ -21,7 +21,7 @@ export default function App() {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container">
             <Link className="navbar-brand" to="/">
-              Kiran Wealth Creation
+              KK Wealth Mills
             </Link>
             <button
               className="navbar-toggler"

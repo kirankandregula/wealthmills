@@ -52,7 +52,7 @@ function HomePage() {
             <div className={`card rounded shadow ${getColorClass(card.QR)}`}>
               <img
                 src={card.Image}
-                className="card-img-top mx-auto d-block rounded-circle"
+                className="card-img-top mx-auto d-block rounded-circle mt-1"
                 style={{ maxWidth: "100px" }} // Adjust the max-width as needed
                 alt={card.Name}
               />
