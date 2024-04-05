@@ -60,7 +60,7 @@ function HomePage() {
                 <h5 className="card-title">{card.Name}</h5>
                 <div className="main d-flex flex-between">
                   <div className="values">
-                    <p className="card-text">Present Value: ₹{card.PV}</p>
+                    <p className="card-text">PortFolio Value: ₹{card.PV}</p>
                     <p className="card-text">Quarterly Return: {card.QR}</p>
                     <p className="card-text">Expected Growth: {card.EG}%</p>
                     <p className="card-text">PE Ratio: {card.PE}</p>
