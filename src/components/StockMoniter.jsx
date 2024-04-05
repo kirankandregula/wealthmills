@@ -7,20 +7,19 @@ const StockMoniter = () => {
   const [filterValue, setFilterValue] = useState("");
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://script.google.com/macros/s/AKfycbwvLBG9TLyGzaXOY2ewXSjp2gvyvQPgyJuGjNXgjRB9zBZJ4z2hrXbh1MQZIfCdEzjN/exec"
+        );
+        setData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        "https://script.google.com/macros/s/AKfycbwvLBG9TLyGzaXOY2ewXSjp2gvyvQPgyJuGjNXgjRB9zBZJ4z2hrXbh1MQZIfCdEzjN/exec",
-      );
-      setData(response.data);
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+    fetchData();
+  }, []); // Empty dependency array to run effect only once on mount
 
   const getScopeColor = (scope) => {
     if (parseFloat(scope.replace("%", "")) >= 50) {
@@ -38,7 +37,7 @@ const StockMoniter = () => {
 
   const handleSort = (columnName) => {
     const sortedData = [...data].sort((a, b) =>
-      a[columnName] > b[columnName] ? 1 : -1,
+      a[columnName] > b[columnName] ? 1 : -1
     );
     setData(sortedData);
   };
@@ -50,7 +49,7 @@ const StockMoniter = () => {
   const filteredData = data.filter(
     (row) =>
       row.Ticker.toLowerCase().includes(filterValue.toLowerCase()) ||
-      row.Sector.toLowerCase().includes(filterValue.toLowerCase()),
+      row.Sector.toLowerCase().includes(filterValue.toLowerCase())
   );
 
   return (
@@ -72,7 +71,9 @@ const StockMoniter = () => {
             <tr>
               <th onClick={() => handleSort("Ticker")}>Ticker</th>
               <th onClick={() => handleSort("Sector")}>Sector</th>
-              <th onClick={() => handleSort("Scope to Grow")}>Scope to Grow</th>
+              <th onClick={() => handleSort("Scope to Grow")}>
+                Scope to Grow
+              </th>
               <th onClick={() => handleSort("Hold/Sell")}>Hold/Sell</th>
             </tr>
           </thead>
