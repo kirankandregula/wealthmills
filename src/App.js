@@ -18,7 +18,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
           <div className="container">
             <Link className="navbar-brand" to="/">
               KK Wealth Mills
@@ -72,6 +72,11 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
+        <footer className="footer mt-auto py-3 bg-dark text-white">
+          <div className="container text-center">
+            All rights reserved to KK Wealth Mills @2024
+          </div>
+        </footer>
       </div>
     </BrowserRouter>
   );
