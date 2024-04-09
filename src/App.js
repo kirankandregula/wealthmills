@@ -6,6 +6,8 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import LoginPage from "./components/LoginPage";
 import HomePage from "./components/HomePage";
+import "./App.css";
+import AboutUs from "./components/About";
 
 
 export default function App() {
