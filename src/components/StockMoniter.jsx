@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { css } from "@emotion/react";
 import { ClipLoader } from "react-spinners";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const override = css`
   display: block;
@@ -14,12 +15,14 @@ const StockMoniter = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterValue, setFilterValue] = useState("");
+  const [cookies] = useCookies(['userName', 'userRole']);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://script.google.com/macros/s/AKfycbwvLBG9TLyGzaXOY2ewXSjp2gvyvQPgyJuGjNXgjRB9zBZJ4z2hrXbh1MQZIfCdEzjN/exec"
+          "https://script.googleusercontent.com/macros/echo?user_content_key=XZrlUsEM2NAI5dbFQqlYVKB3xN7iTe-FzVN4GGAP8ik87A3WImQ3BmVAOocLrEEHrgg3YYe5WxACl91J0dfbx9W-i4AKY-TVm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnLIsAGIJk7nwByX2kP7E6KcaQfttZZzFJP9CDHuNsY9n9zt9O8kY-ipqgo7HRuB6PbxLehp36rzvpZB8rFGwxXnkU3qpDqKHHg&lib=MB2EvUQOnusAtbHEY3orlAmtjq-h6POhb"
         );
         setData(response.data);
       } catch (error) {
@@ -29,8 +32,12 @@ const StockMoniter = () => {
       }
     };
 
-    fetchData();
-  }, []); // Empty dependency array to run effect only once on mount
+    if (!cookies.userName || !cookies.userRole) {
+      navigate('/login');
+    } else {
+      fetchData();
+    }
+  }, [cookies.userName, cookies.userRole, navigate]);
 
   const getScopeColor = (scope) => {
     if (parseFloat(scope.replace("%", "")) >= 50) {
@@ -59,8 +66,9 @@ const StockMoniter = () => {
 
   const filteredData = data.filter(
     (row) =>
-      row.Ticker.toLowerCase().includes(filterValue.toLowerCase()) ||
-      row.Sector.toLowerCase().includes(filterValue.toLowerCase())
+      row.TICKER && // Filter out rows where TICKER is null or undefined
+      (row.TICKER.toLowerCase().includes(filterValue.toLowerCase()) ||
+      row.Sector.toLowerCase().includes(filterValue.toLowerCase()))
   );
 
   return (
@@ -71,7 +79,7 @@ const StockMoniter = () => {
             <ClipLoader color={"#36D7B7"} loading={loading} css={override} size={150} />
           </div>
         ) : (
-          <div className="col-sm-12">
+          <div className="col-sm-12 mt-5">
             <input
               type="text"
               placeholder="Filter by ticker or sector"
@@ -83,19 +91,21 @@ const StockMoniter = () => {
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th onClick={() => handleSort("Ticker")}>Ticker</th>
+                    <th onClick={() => handleSort("TICKER")}>Ticker</th>
                     <th onClick={() => handleSort("Sector")}>Sector</th>
-                    <th onClick={() => handleSort("Scope to Grow")}>Scope to Grow</th>
-                    <th onClick={() => handleSort("Hold/Sell")}>Hold/Sell</th>
+                    <th onClick={() => handleSort("LTP")}>LTP</th>
+                    <th onClick={() => handleSort("SCOPE TO GROW")}>Scope to Grow</th>
+                    <th onClick={() => handleSort("HOLD/SELL")}>Hold/Sell</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredData.map((row, index) => (
                     <tr key={index}>
-                      <td>{row.Ticker}</td>
+                      <td>{row.TICKER}</td>
                       <td>{row.Sector}</td>
-                      <td className={getScopeColor(row["Scope to Grow"])}>{row["Scope to Grow"]}</td>
-                      <td className={getHoldSellColor(row["Hold/Sell"])}>{row["Hold/Sell"]}</td>
+                      <td>{row.LTP}</td>
+                      <td className={getScopeColor(row["SCOPE TO GROW"])}>{row["SCOPE TO GROW"]}</td>
+                      <td className={getHoldSellColor(row["HOLD/SELL"])}>{row["HOLD/SELL"]}</td>
                     </tr>
                   ))}
                 </tbody>
