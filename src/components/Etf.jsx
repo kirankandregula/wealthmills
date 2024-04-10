@@ -29,7 +29,7 @@ const EtfService = () => {
   };
 
   const filteredData = Object.entries(data)
-    .filter(([_, details]) => !Object.values(details).every(value => value === 'NA'))
+    .filter(([_, details]) => !Object.values(details).every(value => value === 'NA') && details["ETF Name"] !== "")
     .reduce((obj, [key, value]) => {
       obj[key] = value;
       return obj;
